@@ -1,0 +1,158 @@
+-- database: ./mydatabase.db
+-- Use the ▷ button in the top right corner to run the entire file.
+-- CREATE TABLE users (
+--   id INTEGER PRIMARY KEY AUTOINCREMENT,
+--   name TEXT NOT NULL,
+--   email TEXT NOT NULL
+-- );
+-- INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com');
+-- INSERT INTO users (name, email) VALUES ('Bob', 'bob@example.com');
+-- INSERT INTO users (name, email) VALUES ('Dhyan Krishna', 'charlie@example.com');
+-- DROP TABLE users
+-- Dated 16-01-2025
+-- Users Table
+-- CREATE TABLE Users (
+--     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     name TEXT NOT NULL,
+--     email TEXT NOT NULL UNIQUE,
+--     password TEXT NOT NULL,
+--     phone_number TEXT,
+--     address TEXT,
+--     role TEXT NOT NULL DEFAULT 'User'
+-- );
+
+-- -- Boats Table
+-- CREATE TABLE Boats (
+--     boat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     boat_name TEXT NOT NULL,
+--     capacity INTEGER NOT NULL,
+--     status TEXT NOT NULL DEFAULT 'Active'
+-- );
+-- -- Routes Table
+-- CREATE TABLE Routes (
+--     route_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     route_name TEXT NOT NULL,
+--     start_location TEXT NOT NULL,
+--     end_location TEXT NOT NULL
+-- );
+-- -- Route Stops Table
+-- CREATE TABLE Route_Stops (
+--     stop_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     route_id INTEGER NOT NULL,
+--     location TEXT NOT NULL,
+--     stop_order INTEGER NOT NULL,
+--     distance_km REAL NOT NULL DEFAULT 0.0,
+--     FOREIGN KEY (route_id) REFERENCES Routes(route_id) ON DELETE CASCADE
+-- );
+-- -- Day-based Schedules Table
+-- CREATE TABLE Schedules (
+--     schedule_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     boat_id INTEGER NOT NULL,
+--     route_id INTEGER NOT NULL,
+--     day TEXT NOT NULL CHECK(day IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')),
+--     departure_time TIME NOT NULL,
+--     arrival_time TIME NOT NULL,
+--     status TEXT NOT NULL DEFAULT 'Scheduled',
+--     FOREIGN KEY (boat_id) REFERENCES Boats(boat_id) ON DELETE CASCADE,
+--     FOREIGN KEY (route_id) REFERENCES Routes(route_id) ON DELETE CASCADE
+-- );
+-- -- Seats Table
+-- CREATE TABLE Seats (
+--     seat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     boat_id INTEGER NOT NULL,
+--     seat_number TEXT NOT NULL,
+--     type TEXT NOT NULL DEFAULT 'Regular',
+--     FOREIGN KEY (boat_id) REFERENCES Boats(boat_id) ON DELETE CASCADE
+-- );
+-- -- Seat Bookings Table
+-- CREATE TABLE Seat_Bookings (
+--     booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     schedule_id INTEGER NOT NULL,
+--     user_id INTEGER NOT NULL,
+--     seat_id INTEGER NOT NULL,
+--     start_stop_id INTEGER NOT NULL,
+--     end_stop_id INTEGER NOT NULL,
+--     booking_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     payment_status TEXT NOT NULL DEFAULT 'Pending',
+--     payment_id INTEGER DEFAULT NULL,
+--     FOREIGN KEY (schedule_id) REFERENCES Schedules(schedule_id) ON DELETE CASCADE,
+--     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+--     FOREIGN KEY (seat_id) REFERENCES Seats(seat_id) ON DELETE CASCADE,
+--     FOREIGN KEY (start_stop_id) REFERENCES Route_Stops(stop_id) ON DELETE CASCADE,
+--     FOREIGN KEY (end_stop_id) REFERENCES Route_Stops(stop_id) ON DELETE CASCADE,
+--     FOREIGN KEY (payment_id) REFERENCES Payments(payment_id) ON DELETE SET NULL
+-- );
+-- -- Payments Table
+-- CREATE TABLE Payments (
+--     payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     amount REAL NOT NULL,
+--     payment_method TEXT NOT NULL,
+--     payment_status TEXT NOT NULL DEFAULT 'Pending',
+--     transaction_id TEXT
+-- );
+-- -- Cancellations Table
+-- CREATE TABLE Cancellations (
+--     cancellation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     booking_id INTEGER NOT NULL,
+--     cancellation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     reason TEXT,
+--     FOREIGN KEY (booking_id) REFERENCES Seat_Bookings(booking_id) ON DELETE CASCADE
+-- );
+-- -- Admin Logs Table
+-- CREATE TABLE Admin_Logs (
+--     log_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     admin_id INTEGER NOT NULL,
+--     action TEXT NOT NULL,
+--     description TEXT,
+--     timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (admin_id) REFERENCES Users(user_id) ON DELETE CASCADE
+-- );
+-- -- Route Stop Times Table
+-- CREATE TABLE Route_Stop_Times (
+--     route_id INTEGER NOT NULL,
+--     stop_id INTEGER NOT NULL,
+--     arrival_time TIME,
+--     PRIMARY KEY (route_id, stop_id),
+--     FOREIGN KEY (route_id) REFERENCES Routes(route_id) ON DELETE CASCADE,
+--     FOREIGN KEY (stop_id) REFERENCES Route_Stops(stop_id) ON DELETE CASCADE
+-- );
+-- -- Stop Pricing Table
+-- CREATE TABLE Stop_Pricing (
+--     pricing_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     start_stop_id INTEGER NOT NULL,
+--     end_stop_id INTEGER NOT NULL,
+--     price REAL NOT NULL,
+--     FOREIGN KEY (start_stop_id) REFERENCES Route_Stops(stop_id) ON DELETE CASCADE,
+--     FOREIGN KEY (end_stop_id) REFERENCES Route_Stops(stop_id) ON DELETE CASCADE
+-- );
+-- -- Tickets Table
+-- CREATE TABLE Tickets (
+--     ticket_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     amount REAL NOT NULL,
+--     user_id INTEGER NOT NULL,
+--     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+-- );
+-- -- Junction Table: Ticket_Bookings
+-- CREATE TABLE Ticket_Bookings (
+--     ticket_booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     ticket_id INTEGER NOT NULL,
+--     booking_id INTEGER NOT NULL,
+--     FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE,
+--     FOREIGN KEY (booking_id) REFERENCES Seat_Bookings(booking_id) ON DELETE CASCADE
+-- );
+-- -- Enquiries Table
+-- CREATE TABLE Enquiries (
+--     enquiry_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     user_id INTEGER DEFAULT NULL,
+--     name TEXT DEFAULT NULL,
+--     email TEXT DEFAULT NULL,
+--     message TEXT NOT NULL,
+--     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--     response TEXT DEFAULT NULL,
+--     response_created_at DATETIME DEFAULT NULL,
+--     response_status INTEGER DEFAULT 0,
+--     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE SET NULL
+-- );
+
+
+INSERT INTO users VALUES (2,'Aliceyy', 'alice@example11.com', 123,'123','ABC','qwe');

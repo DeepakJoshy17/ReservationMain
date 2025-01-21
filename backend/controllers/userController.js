@@ -1,41 +1,47 @@
 const db = require('../database/db');
 
-// Controller to get all users
-const getAllUsers = (req, res) => {
-  db.all('SELECT * FROM users', [], (err, rows) => {
-    if (err) {
-      console.error('Database error:', err.message);
-      res.status(500).json({ error: err.message });
-    } else {
-      res.json(rows);
-    }
-  });
-};
-
-// Controller to add a new user
-const addUser = (req, res) => {
+// Create User
+const createUser = (req, res) => {
   const { name, email, password, phone_number, address, role } = req.body;
 
-  // Log incoming request data for debugging
-  console.log('Received data:', req.body);
-
-  // Validation check for required fields
-  if (!name || !email || !password) {
-    console.log('Validation failed: Missing required fields');
-    return res.status(400).json({ error: 'Name, email, and password are required' });
-  }
-
-  const query =
-    'INSERT INTO users (name, email, password, phone_number, address, role) VALUES (?, ?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO Users (name, email, password, phone_number, address, role) VALUES (?, ?, ?, ?, ?, ?)';
   db.run(query, [name, email, password, phone_number, address, role || 'User'], function (err) {
     if (err) {
-      console.error('Database error:', err.message);
-      return res.status(500).json({ error: err.message });
-    } else {
-      console.log('User added successfully with ID:', this.lastID);
-      res.status(201).json({ message: 'User added successfully', userId: this.lastID });
+      return res.status(500).json({ error: 'Error creating user', details: err.message });
     }
+    res.status(201).json({ message: 'User created successfully', userId: this.lastID });
+  });
+};
+const updateUser = (req, res) => {
+  const { user_id, name, email, password, phone_number, address, role } = req.body;
+
+  const query = 'UPDATE Users SET name = ?, email = ?, password = ?, phone_number = ?, address = ?, role = ? WHERE user_id = ?';
+  db.run(query, [name, email, password, phone_number, address, role, user_id], function (err) {
+    if (err) {
+      return res.status(500).json({ error: 'Error updating user', details: err.message });
+    }
+    res.json({ message: 'User updated successfully' });
+  });
+};
+const deleteUser = (req, res) => {
+  const { user_id } = req.params;
+
+  const query = 'DELETE FROM Users WHERE user_id = ?';
+  db.run(query, [user_id], function (err) {
+    if (err) {
+      return res.status(500).json({ error: 'Error deleting user', details: err.message });
+    }
+    res.json({ message: 'User deleted successfully' });
+  });
+};
+const getUsers = (req, res) => {
+  const query = 'SELECT * FROM Users';
+  db.all(query, [], (err, users) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error fetching users', details: err.message });
+    }
+    res.json({ users });
   });
 };
 
-module.exports = { getAllUsers, addUser };
+module.exports = { getUsers, createUser, deleteUser, updateUser };

@@ -20,7 +20,6 @@
 --     address TEXT,
 --     role TEXT NOT NULL DEFAULT 'User'
 -- );
-
 -- -- Boats Table
 -- CREATE TABLE Boats (
 --     boat_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,17 +44,16 @@
 --     FOREIGN KEY (route_id) REFERENCES Routes(route_id) ON DELETE CASCADE
 -- );
 -- -- Day-based Schedules Table
--- CREATE TABLE Schedules (
---     schedule_id INTEGER PRIMARY KEY AUTOINCREMENT,
---     boat_id INTEGER NOT NULL,
---     route_id INTEGER NOT NULL,
---     day TEXT NOT NULL CHECK(day IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')),
---     departure_time TIME NOT NULL,
---     arrival_time TIME NOT NULL,
---     status TEXT NOT NULL DEFAULT 'Scheduled',
---     FOREIGN KEY (boat_id) REFERENCES Boats(boat_id) ON DELETE CASCADE,
---     FOREIGN KEY (route_id) REFERENCES Routes(route_id) ON DELETE CASCADE
--- );
+-- CREATE TABLE IF NOT EXISTS Schedules (
+--     schedule_id INT AUTO_INCREMENT PRIMARY KEY,
+--     boat_id INT NOT NULL,
+--     route_id INT NOT NULL,
+--     departure_time DATETIME NOT NULL,
+--     arrival_time DATETIME NOT NULL,
+--     status VARCHAR(50) NOT NULL DEFAULT 'Scheduled',
+--     FOREIGN KEY (boat_id) REFERENCES Boats(boat_id),
+--     FOREIGN KEY (route_id) REFERENCES Routes(route_id)
+-- )
 -- -- Seats Table
 -- CREATE TABLE Seats (
 --     seat_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -153,6 +151,13 @@
 --     response_status INTEGER DEFAULT 0,
 --     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE SET NULL
 -- );
-
-
-INSERT INTO users VALUES (2,'Aliceyy', 'alice@example11.com', 123,'123','ABC','qwe');
+-- INSERT INTO users VALUES (2,'Aliceyy', 'alice@example11.com', 123,'123','ABC','qwe');
+-- SELECT * FROM Users;
+-- INSERT INTO Routes (route_name, start_location, end_location) 
+-- VALUES ('Test Route111', 'Start Location', 'End Location');
+-- SELECT
+--     *
+-- FROM
+--     Routes;
+-- ALTER TABLE Users
+-- ADD COLUMN price REAL;

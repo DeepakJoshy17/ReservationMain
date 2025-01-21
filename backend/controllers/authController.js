@@ -1,15 +1,18 @@
 const db = require('../database/db');
 
 // Signup controller
+
 const signup = (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone_number, address, role } = req.body;
 
   if (!name || !email || !password) {
-    return res.status(400).json({ error: 'All fields are required' });
+    return res.status(400).json({ error: 'Name, email, and password are required' });
   }
 
-  const query = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-  db.run(query, [name, email, password], function (err) {
+  // SQL query to insert the user
+  const query = 'INSERT INTO users (name, email, password, phone_number, address, role) VALUES (?, ?, ?, ?, ?, ?)';
+  
+  db.run(query, [name, email, password, phone_number, address, role], function (err) {
     if (err) {
       console.error('Database error:', err.message);
       return res.status(500).json({ error: 'Failed to create user' });
@@ -18,6 +21,10 @@ const signup = (req, res) => {
   });
 };
 
+module.exports = { signup };
+
+
+// Login controller
 // Login controller
 const login = (req, res) => {
   const { email, password } = req.body;
@@ -39,7 +46,25 @@ const login = (req, res) => {
 
     // Save session
     req.session.userId = user.id;
+    req.session.userName = user.name; // Save the user's name in the session
     res.json({ message: 'Logged in successfully', user });
+  });
+};
+
+// Get Profile controller (fetch user info from session)
+const getProfile = (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  const query = 'SELECT * FROM users WHERE id = ?';
+  db.get(query, [req.session.userId], (err, user) => {
+    if (err) {
+      console.error('Database error:', err.message);
+      return res.status(500).json({ error: 'Failed to fetch user profile' });
+    }
+
+    res.json({ user });
   });
 };
 
@@ -54,4 +79,4 @@ const logout = (req, res) => {
   });
 };
 
-module.exports = { signup, login, logout };
+module.exports = { signup, login, logout, getProfile };

@@ -22,6 +22,8 @@ import SeatManagement from './pages/SeatManagement';
 import ScheduleManagement from './pages/ScheduleManagement';
 import PaymentManagement from './pages/PaymentManagement';
 import BookingManagement from './pages/BookingManagement';
+import SeatViewPage from './pages/SeatViewPage';
+import UserPaymentPage from './pages/UserPaymentPage';
 
 
 function App() {
@@ -44,6 +46,11 @@ function App() {
           <Route path="/admin/schedules" element={<ScheduleManagement />} />
           <Route path="/admin/payments" element={<PaymentManagement />} />
           <Route path="/admin/bookings" element={<BookingManagement />} />
+          <Route path="/seats/:schedule_id/:start_stop_id/:end_stop_id" element={<SeatViewPage />} />
+
+          <Route path="/seatview" element={<SeatViewPage />} />
+          <Route path="/payment" element={<UserPaymentPage/>} />
+
           
         </Routes>
       </Router>

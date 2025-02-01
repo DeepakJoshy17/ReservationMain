@@ -72,18 +72,26 @@ const ScheduleManagement = () => {
 
   const handleUpdateSubmit = (e) => {
     e.preventDefault();
+  
+    // Check if required fields are filled out
+    if (!updateSchedule.boat_id || !updateSchedule.route_id || !updateSchedule.departure_time || !updateSchedule.arrival_time || !updateSchedule.status) {
+      alert('Please fill out all fields');
+      return;
+    }
+  
     axios
       .put(`http://localhost:5000/api/schedules/${updateSchedule.schedule_id}`, updateSchedule)
       .then(() => {
         alert('Schedule updated successfully!');
         fetchSchedules();
-        setUpdateSchedule(null);
+        setUpdateSchedule(null); // Clear form after successful update
       })
       .catch((error) => {
         console.error('Error updating schedule:', error);
         alert('Failed to update schedule.');
       });
   };
+  
 
   const handleDelete = (schedule_id) => {
     axios

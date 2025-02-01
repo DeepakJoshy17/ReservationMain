@@ -100,6 +100,7 @@ const updateSchedule = (req, res) => {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
+  // Check if schedule conflicts with existing schedules
   checkScheduleConflict(boat_id, route_id, departure_time, arrival_time, (err, isConflict) => {
     if (err) {
       return res.status(500).json({ error: 'Failed to check schedule conflict' });
@@ -111,6 +112,7 @@ const updateSchedule = (req, res) => {
       });
     }
 
+    // Update the schedule if no conflict
     const query = `
       UPDATE Schedules
       SET boat_id = ?, route_id = ?, departure_time = ?, arrival_time = ?, status = ?
@@ -123,10 +125,17 @@ const updateSchedule = (req, res) => {
         console.error('Error updating schedule:', err.message);
         return res.status(500).json({ error: 'Failed to update schedule' });
       }
+
+      // Check if any row was affected
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Schedule not found' });
+      }
+
       res.json({ message: 'Schedule updated successfully', updated: this.changes });
     });
   });
 };
+
 
 // Delete a schedule
 const deleteSchedule = (req, res) => {

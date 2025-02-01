@@ -1,0 +1,274 @@
+// below is my seat iew page 
+// import React, { useState, useEffect, useCallback } from 'react';
+// import { useParams, useNavigate } from 'react-router-dom';
+// import axios from 'axios';
+// import Navbar from '../components/Navbar';
+
+// const SeatViewPage = () => {
+//   const { schedule_id } = useParams();
+//   const navigate = useNavigate();
+
+//   const [seats, setSeats] = useState([]);
+//   const [selectedSeats, setSelectedSeats] = useState([]);
+//   const [error, setError] = useState('');
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     axios.defaults.baseURL = 'http://localhost:5000';
+//   }, []);
+
+//   const fetchSeats = useCallback(async () => {
+//     setError('');
+//     setLoading(true);
+//     try {
+//       const response = await axios.get(`/api/userBookings/seats/${schedule_id}`);
+//       setSeats(response.data);
+//     } catch (err) {
+//       console.error('Error fetching seats:', err);
+//       setError(`Failed to load seats. Error: ${err.response ? err.response.data : err.message}`);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [schedule_id]);
+
+//   useEffect(() => {
+//     fetchSeats();
+//   }, [fetchSeats]);
+
+//   const toggleSeatSelection = (seatId) => {
+//     if (selectedSeats.includes(seatId)) {
+//       setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
+//     } else {
+//       setSelectedSeats([...selectedSeats, seatId]);
+//     }
+//   };
+
+//   const proceedToPayment = () => {
+//     if (selectedSeats.length === 0) {
+//       setError('Please select at least one seat to book.');
+//       return;
+//     }
+//     navigate('/payment', {
+//       state: { schedule_id, selectedSeats },
+//     });
+//   };
+
+//   return (
+//     <div>
+//       <Navbar />
+//       <h4>Seat Selection</h4>
+//       {error && <p style={{ color: 'red' }}>{error}</p>}
+//       {loading ? (
+//         <p>Loading seats...</p>
+//       ) : (
+//         <div>
+//           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
+//             {seats.map((seat) => (
+//               <div
+//                 key={seat.seat_id}
+//                 onClick={() => seat.is_booked ? null : toggleSeatSelection(seat.seat_id)}
+//                 style={{
+//                   padding: '10px',
+//                   border: '1px solid black',
+//                   textAlign: 'center',
+//                   backgroundColor: seat.is_booked
+//                     ? 'gray'
+//                     : selectedSeats.includes(seat.seat_id)
+//                     ? 'green'
+//                     : 'white',
+//                   color: seat.is_booked ? 'white' : 'black',
+//                   cursor: seat.is_booked ? 'not-allowed' : 'pointer',
+//                 }}
+//               >
+//                 {seat.seat_number} {seat.is_booked ? '(Booked)' : ''}
+//               </div>
+//             ))}
+//           </div>
+//           <button onClick={proceedToPayment} disabled={loading}>
+//             Proceed to Payment
+//           </button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SeatViewPage;
+// below is its controller 
+// const db = require('../database/db'); // Import SQLite connection
+
+// // Get seats for a specific boat schedule
+// const getSeats = (req, res) => {
+//   const { schedule_id } = req.params;
+//   const query = `
+//     SELECT 
+//       s.seat_id, 
+//       s.seat_number, 
+//       s.type, 
+//       s.status,
+//       CASE 
+//         WHEN EXISTS (
+//           SELECT 1 
+//           FROM Seat_Bookings sb 
+//           WHERE sb.seat_id = s.seat_id 
+//             AND sb.schedule_id = ?
+//         ) THEN 1
+//         ELSE 0
+//       END AS is_booked
+//     FROM Seats s
+//     JOIN Schedules sc ON s.boat_id = sc.boat_id
+//     WHERE sc.schedule_id = ?
+//   `;
+//   db.all(query, [schedule_id, schedule_id], (err, rows) => {
+//     if (err) {
+//       return res.status(500).json({ error: 'Failed to fetch seats' });
+//     }
+//     res.status(200).json(rows);
+//   });
+// };
+
+
+// module.exports = { getSeats };
+// below is my next page after seat view called payment 
+// import React, { useState, useEffect } from 'react';
+// import { useNavigate, useLocation } from 'react-router-dom';
+// import axios from 'axios';
+// import Navbar from '../components/Navbar';
+
+// const PaymentPage = () => {
+//   const navigate = useNavigate();
+//   const location = useLocation();
+
+//   const { schedule_id, selectedSeats } = location.state || {};
+
+//   const [totalPrice, setTotalPrice] = useState(0);
+//   const [error, setError] = useState('');
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     if (!selectedSeats || !schedule_id) {
+//       navigate(`/seats/${schedule_id}`);
+//     } else {
+//       setTotalPrice(selectedSeats.length * 10); // Example: $10 per seat
+//     }
+//   }, [selectedSeats, schedule_id, navigate]);
+
+//   const handlePayment = async () => {
+//     setLoading(true);
+//     setError('');
+//     try {
+//       await axios.post('/api/userBookings/payment', {
+//         schedule_id,
+//         seat_ids: selectedSeats,
+//         amount: totalPrice,
+//       });
+//       alert('Payment successful!');
+//       navigate('/confirmation');
+//     } catch (err) {
+//       console.error('Payment error:', err);
+//       setError('Payment failed. Please try again.');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <Navbar />
+//       <h4>Payment Page</h4>
+//       {error && <p style={{ color: 'red' }}>{error}</p>}
+//       <div>
+//         <p><strong>Selected Seats:</strong> {selectedSeats ? selectedSeats.join(', ') : 'None'}</p>
+//         <p><strong>Total Price:</strong> ${totalPrice}</p>
+//         <button onClick={handlePayment} disabled={loading}>
+//           {loading ? 'Processing...' : 'Pay Now'}
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PaymentPage;
+// below is payment controller 
+// const db = require('../database/db'); // Ensure you have a db module for database operations
+
+// const processUserPayment = (req, res) => {
+//   const { schedule_id, seat_ids, amount } = req.body;
+//   const user_id = 1; // Replace with actual user ID (e.g., from session)
+
+//   if (!schedule_id || !Array.isArray(seat_ids) || seat_ids.length === 0 || !amount) {
+//     return res.status(400).json({ error: 'Invalid input data' });
+//   }
+
+//   const placeholders = seat_ids.map(() => '(?, ?, ?, ?, ?, ?)').join(', ');
+//   const values = seat_ids.flatMap((seat_id) => [
+//     schedule_id,
+//     user_id,
+//     seat_id,
+//     1, // Replace with actual start stop ID
+//     2, // Replace with actual end stop ID
+//     'Confirmed', // Update the payment status to 'Confirmed'
+//   ]);
+
+//   const query = `
+//     INSERT INTO Seat_Bookings (
+//       schedule_id, user_id, seat_id, start_stop_id, end_stop_id, payment_status
+//     ) VALUES ${placeholders}
+//   `;
+
+//   db.run(query, values, function (err) {
+//     if (err) {
+//       console.error('Error processing payment:', err);
+//       return res.status(500).json({ error: 'Payment processing failed' });
+//     }
+//     res.status(200).json({ message: 'Payment successful and seats booked!' });
+//   });
+// };
+
+// module.exports = { processUserPayment };
+// these are my tables below -- -- Seat Bookings Table
+// -- CREATE TABLE Seat_Bookings (
+// --     booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
+// --     schedule_id INTEGER NOT NULL,
+// --     user_id INTEGER NOT NULL,
+// --     seat_id INTEGER NOT NULL,
+// --     start_stop_id INTEGER NOT NULL,
+// --     end_stop_id INTEGER NOT NULL,
+// --     booking_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+// --     payment_status TEXT NOT NULL DEFAULT 'Pending',
+// --     payment_id INTEGER DEFAULT NULL,
+// --     FOREIGN KEY (schedule_id) REFERENCES Schedules(schedule_id) ON DELETE CASCADE,
+// --     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+// --     FOREIGN KEY (seat_id) REFERENCES Seats(seat_id) ON DELETE CASCADE,
+// --     FOREIGN KEY (start_stop_id) REFERENCES Route_Stops(stop_id) ON DELETE CASCADE,
+// --     FOREIGN KEY (end_stop_id) REFERENCES Route_Stops(stop_id) ON DELETE CASCADE,
+// --     FOREIGN KEY (payment_id) REFERENCES Payments(payment_id) ON DELETE SET NULL
+// -- );  
+// -- -- Payments Table
+// -- CREATE TABLE Payments (
+// --     payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+// --     amount REAL NOT NULL,
+// --     payment_method TEXT NOT NULL,
+// --     payment_status TEXT NOT NULL DEFAULT 'Pending',
+// --     transaction_id TEXT
+// -- );
+
+// -- -- -- Day-based Schedules Table
+// -- CREATE TABLE IF NOT EXISTS Schedules (
+// --     schedule_id INT AUTO_INCREMENT PRIMARY KEY,
+// --     boat_id INT NOT NULL,
+// --     route_id INT NOT NULL,
+// --     departure_time DATETIME NOT NULL,
+// --     arrival_time DATETIME NOT NULL,
+// --     status VARCHAR(50) NOT NULL DEFAULT 'Scheduled',
+// --     FOREIGN KEY (boat_id) REFERENCES Boats(boat_id),
+// --     FOREIGN KEY (route_id) REFERENCES Routes(route_id)
+// -- )
+// -- -- Seats Table
+// -- CREATE TABLE Seats (
+// --     seat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+// --     boat_id INTEGER NOT NULL,
+// --     seat_number TEXT NOT NULL,
+// --     type TEXT NOT NULL DEFAULT 'Regular',
+// --     FOREIGN KEY (boat_id) REFERENCES Boats(boat_id) ON DELETE CASCADE
+// -- ); i want such that in seat view page while fetching seats the seat should be available for selecting if it is not in seat booking atblle that seat id with same start stop end stop and same route and same boat dont show the seat make it grey unavailable so that other ca selecte it and if it has no entry for that seat id with same route start stop end stop and schedule then make it available for selecting and also the slected setas and schedule should be passed to payment page where if i click on pay button a dummy page it shpuld write the bookings to seat bookings table for each seatid with schedule start stop end stop schedule and also to payemnets table now give codes 

@@ -1,20 +1,26 @@
-// src/context/SessionContext.js
-
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const SessionContext = createContext();
-
-export const useSession = () => useContext(SessionContext);
 
 export const SessionProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const setSession = (user) => {
-    setUser(user); // Set user session data
+  useEffect(() => {
+    // Retrieve user from localStorage if it exists
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const setSession = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData)); // Save user data to localStorage
   };
 
   const clearSession = () => {
-    setUser(null); // Clear session data
+    setUser(null);
+    localStorage.removeItem('user'); // Remove user data from localStorage
   };
 
   return (
@@ -23,3 +29,5 @@ export const SessionProvider = ({ children }) => {
     </SessionContext.Provider>
   );
 };
+
+export const useSession = () => useContext(SessionContext);

@@ -13,6 +13,9 @@ const seatRoutes = require('./routes/seatRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const userBookingRoutes = require('./routes/userBookingRoutes');
+// const seatViewRoutes = require('./routes/seatViewRoutes');
+const userPaymentRoutes = require('./routes/userPaymentRoutes');
 
 const app = express();
 const PORT = 5000;
@@ -22,7 +25,7 @@ app.use(cors({
   origin: 'http://localhost:3000', // Replace with your frontend URL
   credentials: true, // Enable cookies and sessions
 }));
-app.use(bodyParser.json());
+app.use(express.json()); // This ensures req.body is properly parsed
 app.use(session({
   secret: 'mysecretkey',
   resave: false,
@@ -42,6 +45,12 @@ app.use('/api', seatRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/seat-bookings', bookingRoutes);
+
+// User Routes
+app.use('/api/userBookings', userBookingRoutes);
+// app.use('/api/userBookings', seatViewRoutes); // API path for seat bookings
+app.use('/api/userBookings', userPaymentRoutes);
+
 
 // Start server
 app.listen(PORT, () => {

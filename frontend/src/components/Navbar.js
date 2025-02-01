@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSession } from '../context/SessionContext';
-import { FaUserCircle } from 'react-icons/fa'; // Import a user profile icon
+import { FaUserCircle } from 'react-icons/fa';
 
 const Navbar = () => {
-  const { user, clearSession } = useSession(); // Access user data from context
+  const { user, clearSession } = useSession(); // Access session context
 
   const handleLogout = () => {
-    clearSession(); // Clear session data
-    // Redirect to login page after logout (optional)
+    clearSession(); // Clear session and redirect to the home page
   };
 
   return (
@@ -20,17 +19,13 @@ const Navbar = () => {
         <li>
           <Link to="/book">Book</Link>
         </li>
-        {/* <li>
-          <Link to="/adminmanagement">Admin</Link>
-        </li> */}
         {user ? (
           <>
             <li className="user-profile">
-              <FaUserCircle size={24} /> {/* Profile icon */}
-              <span className="user-name"> {user.name}</span>
+              <FaUserCircle size={24} />
+              <span className="user-name">{user.name}</span>
             </li>
             <li>
-              {/* Make the logout a link but keep the functionality */}
               <Link to="/" onClick={handleLogout} className="logout-link">
                 Logout
               </Link>

@@ -16,6 +16,7 @@ const bookingRoutes = require('./routes/bookingRoutes');
 const userBookingRoutes = require('./routes/userBookingRoutes');
 // const seatViewRoutes = require('./routes/seatViewRoutes');
 const userPaymentRoutes = require('./routes/userPaymentRoutes');
+const ticketRoutes = require('./routes/ticketRoutes'); // Ticket routes
 
 const app = express();
 const PORT = 5000;
@@ -50,6 +51,7 @@ app.use('/api/seat-bookings', bookingRoutes);
 app.use('/api/userBookings', userBookingRoutes);
 // app.use('/api/userBookings', seatViewRoutes); // API path for seat bookings
 app.use('/api/userBookings', userPaymentRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 
 // Start server

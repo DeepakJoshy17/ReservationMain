@@ -39,10 +39,10 @@ const UserPaymentPage = () => {
       setError('You must be logged in to proceed with the payment.');
       return;
     }
-
+  
     setLoading(true);
     setError('');
-
+  
     try {
       // Create payment entry first
       const paymentResponse = await axios.post('/api/payments', {
@@ -51,11 +51,11 @@ const UserPaymentPage = () => {
         payment_status: 'Pending',
         transaction_id: '12345ABC', // Example, adjust accordingly
       });
-
+  
       const payment_id = paymentResponse.data.payment_id;
-
+  
       // Now, book seats and associate with payment
-      await axios.post('/api/userBookings/book', {
+      const bookingResponse = await axios.post('/api/userBookings/book', {
         schedule_id,
         user_id: user.user_id,
         seat_ids: selectedSeats,
@@ -63,9 +63,14 @@ const UserPaymentPage = () => {
         end_stop_id: end_stop_id,      // Use end_stop_id passed from SeatViewPage
         payment_id: payment_id,
       });
-
+  
+      const seat_booking_ids = bookingResponse.data.booking_ids; // Now includes seat booking IDs
+  
+      // Pass seat_booking_ids to the ticket page
+      console.log("Passing seat_booking_ids to ticket page:", seat_booking_ids);
+      navigate('/ticket', { state: { seat_booking_ids } });
+  
       alert('Payment successful!');
-      navigate('/ticket');
     } catch (err) {
       console.error('Payment error:', err);
       setError('Payment failed. Please try again.');
@@ -73,6 +78,9 @@ const UserPaymentPage = () => {
       setLoading(false);
     }
   };
+  
+  
+  
 
   return (
     <div>

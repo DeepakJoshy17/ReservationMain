@@ -41,6 +41,7 @@ const createPayment = (req, res) => {
 };
 
 // Book selected seats and associate with payment_id
+// Book selected seats and associate with payment_id
 const bookSeats = (req, res) => {
   const { schedule_id, user_id, seat_ids, start_stop_id, end_stop_id, payment_id } = req.body;
 
@@ -75,7 +76,16 @@ const bookSeats = (req, res) => {
       console.error('Error booking seats:', err);
       return res.status(500).json({ error: 'Failed to book seats' });
     }
-    res.status(200).json({ message: 'Seats booked successfully' });
+
+    // Fetch the seat booking IDs (this will be the last inserted IDs)
+    const seat_booking_ids = [];
+    for (let i = 0; i < seat_ids.length; i++) {
+      seat_booking_ids.push(this.lastID - seat_ids.length + 1 + i); // Get the booking IDs
+    }
+
+    console.log('Seat Booking IDs:', seat_booking_ids);
+
+    res.status(200).json({ message: 'Seats booked successfully', booking_ids: seat_booking_ids });
   });
 };
 

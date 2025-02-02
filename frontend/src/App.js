@@ -24,6 +24,7 @@ import PaymentManagement from './pages/PaymentManagement';
 import BookingManagement from './pages/BookingManagement';
 import SeatViewPage from './pages/SeatViewPage';
 import UserPaymentPage from './pages/UserPaymentPage';
+import TicketPage from './pages/TicketPage';
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
 
           <Route path="/seatview" element={<SeatViewPage />} />
           <Route path="/payment" element={<UserPaymentPage/>} />
+          <Route path="/ticket" element={<TicketPage />} />
 
           
         </Routes>

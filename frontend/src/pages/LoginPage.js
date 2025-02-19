@@ -9,11 +9,11 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { setSession } = useSession(); // Access the setSession function from context
+  const { setSession } = useSession(); // ✅ Access setSession function
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(''); // Reset error message
+    setError('');
     if (!email || !password) {
       setError('Both email and password are required.');
       return;
@@ -28,22 +28,21 @@ const LoginPage = () => {
       );
 
       if (response.status === 200) {
-        setSession(response.data.user); // Set user session in context
-        alert('Login successful');
+        const loggedInUser = response.data.user;
+        setSession(loggedInUser); // ✅ Set session based on role
 
-        // Navigate based on the user's role
-        if (response.data.user.role === 'Admin') {
-          navigate('/admin'); // Redirect to admin management page
+        alert(`Login successful as ${loggedInUser.role}`);
+
+        if (loggedInUser.role === 'Admin') {
+          navigate('/admin'); // ✅ Redirect Admin to Admin Panel
         } else {
-          navigate('/'); // Redirect to homepage for normal users
+          navigate('/'); // ✅ Redirect User to Homepage
         }
       } else {
         setError('Login failed. Please try again.');
       }
     } catch (error) {
-      setError(
-        error.response?.data?.message || 'An error occurred while logging in.'
-      );
+      setError(error.response?.data?.message || 'An error occurred while logging in.');
     } finally {
       setLoading(false);
     }

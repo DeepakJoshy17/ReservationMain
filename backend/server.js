@@ -17,6 +17,9 @@ const userBookingRoutes = require('./routes/userBookingRoutes');
 // const seatViewRoutes = require('./routes/seatViewRoutes');
 const userPaymentRoutes = require('./routes/userPaymentRoutes');
 const ticketRoutes = require('./routes/ticketRoutes'); // Ticket routes
+const userProfileRoutes = require('./routes/userProfileRoutes');
+const profileTicketRoutes = require('./routes/profileTicketRoutes');
+const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
 const PORT = 5000;
@@ -52,9 +55,18 @@ app.use('/api/userBookings', userBookingRoutes);
 // app.use('/api/userBookings', seatViewRoutes); // API path for seat bookings
 app.use('/api/userBookings', userPaymentRoutes);
 app.use('/api/tickets', ticketRoutes);
+//profile Routes
+app.use('/api/users', userProfileRoutes);
+app.use('/api/profile-tickets', profileTicketRoutes);
+app.use("/api/chat", chatRoutes);
+
 
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });
+app.listen(5000, '0.0.0.0', () => {
+  console.log("Server running on port 5000");
 });
+

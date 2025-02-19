@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { QRCodeCanvas } from 'qrcode.react'; // Correct import
+import { QRCodeCanvas } from 'qrcode.react';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 const TicketPage = () => {
   const location = useLocation();
@@ -12,7 +13,7 @@ const TicketPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Received seat_booking_ids in frontend:", seat_booking_ids); // Debugging
+    console.log("🔍 Checking for existing ticket with seat_booking_ids:", seat_booking_ids);
 
     if (!seat_booking_ids || seat_booking_ids.length === 0) {
       setError('Invalid ticket data');
@@ -20,27 +21,41 @@ const TicketPage = () => {
       return;
     }
 
+    // ✅ Prevent duplicate API calls using sessionStorage
+    if (sessionStorage.getItem(`processing_ticket_${seat_booking_ids.join('_')}`)) {
+      console.warn("⚠️ Duplicate request blocked for:", seat_booking_ids);
+      return;
+    }
+
+    sessionStorage.setItem(`processing_ticket_${seat_booking_ids.join('_')}`, 'true'); // Set flag
+
     axios.post('/api/tickets/generate', { seat_booking_ids })
       .then((response) => {
-        console.log("Ticket generated:", response.data);
+        console.log("✅ Ticket Generated:", response.data);
         setTicket(response.data);
+        sessionStorage.setItem(`ticket_${seat_booking_ids.join('_')}`, JSON.stringify(response.data));
       })
       .catch((err) => {
-        console.error('Error generating ticket:', err);
+        console.error('❌ Error generating ticket:', err);
         setError('Failed to generate ticket');
       })
-      .finally(() => setLoading(false));
-  }, [seat_booking_ids]);
+      .finally(() => {
+        sessionStorage.removeItem(`processing_ticket_${seat_booking_ids.join('_')}`); // Remove flag
+        setLoading(false);
+      });
 
-  if (loading) return <p>Processing your ticket...</p>;
+  }, []); // ✅ Empty dependency list ensures API is only called once
+
+  if (loading) return <p>🔄 Loading ticket...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
   if (!ticket) return null;
 
   return (
     <div>
+      <Navbar/>
       <h2>Your Ticket</h2>
       <p><strong>Ticket ID:</strong> {ticket.ticket_id}</p>
-      <p><strong>Total Amount:</strong> ${ticket.amount}</p>
+      <p><strong>Total Amount:</strong> ₹{ticket.amount}</p>
       <p><strong>Seat Bookings:</strong> {ticket.seat_booking_ids.join(', ')}</p>
 
       <h3>Scan QR Code</h3>

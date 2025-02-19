@@ -4,60 +4,47 @@ import { useSession } from '../context/SessionContext';
 import { FaUserCircle } from 'react-icons/fa';
 
 const AdminNavbar = () => {
-  const { user, clearSession } = useSession(); // Access user data from context
+  const { adminSession, clearSession } = useSession(); // ✅ Use adminSession instead of user
 
   const handleLogout = () => {
-    clearSession(); // Clear session data
+    clearSession(); // ✅ Clears session data
   };
 
   return (
     <nav>
       <ul>
-        <li>
-        <Link to="/admin">Home</Link>
-        </li>
-        <li>
-          <Link to="/admin/users">User</Link>
-        </li>
+        <li><Link to="/admin">Home</Link></li>
+        <li><Link to="/admin/users">Users</Link></li>
 
-        {user ? (
+        {adminSession ? (
           <>
-                  <li>
-          <Link to="/admin/boats">Boat</Link>
-        </li>
-        <li>
-          <Link to="/admin/routes">Route</Link>
-        </li>
-        <li>
-          <Link to="/admin/route-stops">Stop</Link>
-        </li>
-        <li>
-          <Link to="/admin/stop-pricings">Price</Link>
-        </li>
-        <li>
-          <Link to="/admin/stop-timings">Time</Link>
-        </li>
-        <li>
-          <Link to="/admin/seats">Seat</Link>
-        </li>
-        <li>
-          <Link to="/admin/schedules">Schedule</Link>
-        </li>
-        <li>
-          <Link to="/admin/payments">Payment</Link>
-        </li>
-        <li>
-          <Link to="/admin/bookings">Booking</Link>
-        </li>
+            <li><Link to="/admin/boats">Boats</Link></li>
+            <li><Link to="/admin/routes">Routes</Link></li>
+            <li><Link to="/admin/route-stops">Stops</Link></li>
+            <li><Link to="/admin/stop-pricings">Prices</Link></li>
+            <li><Link to="/admin/stop-timings">Timings</Link></li>
+            <li><Link to="/admin/seats">Seats</Link></li>
+            <li><Link to="/admin/schedules">Schedules</Link></li>
+            <li><Link to="/admin/payments">Payments</Link></li>
+            <li><Link to="/admin/bookings">Bookings</Link></li>
+            <li><Link to="/admin-chat">Responses</Link></li>
+      
+            
+
+            {/* ✅ Admin Profile Section */}
             <li className="user-profile">
-              <FaUserCircle size={24} /> {/* Profile icon */}
-              <span className="user-name"> {user.name}</span>
+              <FaUserCircle size={24} />
+              <span className="user-name"> {adminSession.name}</span>
             </li>
+
+            {/* ✅ Logout */}
             <li>
               <Link to="/" onClick={handleLogout} className="logout-link">
                 Logout
               </Link>
+              
             </li>
+           
           </>
         ) : (
           <li>

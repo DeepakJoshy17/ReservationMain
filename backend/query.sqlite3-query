@@ -136,7 +136,21 @@
 --     ticket_id INTEGER NOT NULL,
 --     booking_id INTEGER NOT NULL,
 --     FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE,
---     FOREIGN KEY (booking_id) REFERENCES Seat_Bookings(booking_id) ON DELETE CASCADE
+--     FOREIGN KEY (booking_id) REFERENCES Seat_Bookings(booking_id) ON DELETE CASCADE,
+--     UNIQUE(ticket_id, booking_id)  -- ✅ Prevent duplicate entries
+-- );
+-- --CREATE TABLE Chats (
+--     chat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     user_id INTEGER NOT NULL,
+--     admin_id INTEGER DEFAULT NULL, -- Null if handled by chatbot
+--     message TEXT NOT NULL,
+--     sender TEXT CHECK(sender IN ('User', 'Admin', 'Bot')) NOT NULL,
+--     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--     forwarded_to_admin INTEGER DEFAULT 0, -- 1 if forwarded
+--     bot_response TEXT DEFAULT NULL, -- Bot's initial response
+--     admin_response TEXT DEFAULT NULL, -- Admin's final response
+--     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+--     FOREIGN KEY (admin_id) REFERENCES Users(user_id) ON DELETE SET NULL
 -- );
 -- -- Enquiries Table
 -- CREATE TABLE Enquiries (
@@ -161,18 +175,18 @@
 --     Routes;
 -- ALTER TABLE Users
 -- ADD COLUMN price REAL;
-INSERT INTO Schedules (boat_id, route_id, departure_time, arrival_time, status)
-VALUES (3, 4, '2025-01-25 10:00:00', '2025-01-25 12:00:00', 'Scheduled');
-DROP TABLE IF EXISTS Schedules;
-CREATE TABLE Schedules (
-  schedule_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  boat_id INTEGER NOT NULL,
-  route_id INTEGER NOT NULL,
-  departure_time TEXT NOT NULL,
-  arrival_time TEXT NOT NULL,
-  status TEXT NOT NULL,
-  FOREIGN KEY (boat_id) REFERENCES Boats (boat_id),
-  FOREIGN KEY (route_id) REFERENCES Routes (route_id)
-);
-INSERT INTO Schedules (boat_id, route_id, departure_time, arrival_time, status)
-VALUES (3, 4, '2025-01-25 10:00:00', '2025-01-25 12:00:00', 'Scheduled');
+-- INSERT INTO Schedules (boat_id, route_id, departure_time, arrival_time, status)
+-- VALUES (3, 4, '2025-01-25 10:00:00', '2025-01-25 12:00:00', 'Scheduled');
+-- DROP TABLE IF EXISTS Schedules;
+-- CREATE TABLE Schedules (
+--   schedule_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--   boat_id INTEGER NOT NULL,
+--   route_id INTEGER NOT NULL,
+--   departure_time TEXT NOT NULL,
+--   arrival_time TEXT NOT NULL,
+--   status TEXT NOT NULL,
+--   FOREIGN KEY (boat_id) REFERENCES Boats (boat_id),
+--   FOREIGN KEY (route_id) REFERENCES Routes (route_id)
+-- );
+-- INSERT INTO Schedules (boat_id, route_id, departure_time, arrival_time, status)
+-- VALUES (3, 4, '2025-01-25 10:00:00', '2025-01-25 12:00:00', 'Scheduled');

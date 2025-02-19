@@ -5,16 +5,18 @@ import { useSession } from '../context/SessionContext';
 import Navbar from '../components/Navbar';
 
 const HomePage = () => {
-  const { user } = useSession(); // Access user data from context
+  const { userSession } = useSession(); // ✅ Access user session from context
 
   return (
     <div>
       <Navbar />
-      {user ? (
-        <h4>Welcome, {user.name}!</h4> // Display user name if logged in
-      ) : (
-        <h4>Welcome to the Home Page! Please log in.</h4>
-      )}
+      <div className="home-container">
+        {userSession ? (
+          <h4>Welcome, {userSession.name}!</h4> // ✅ Ensure userSession exists before accessing name
+        ) : (
+          <h4>Welcome to the Home Page! Please <a href="/login">log in</a> to continue.</h4> // ✅ Added login link for better UX
+        )}
+      </div>
     </div>
   );
 };

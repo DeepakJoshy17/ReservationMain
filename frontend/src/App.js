@@ -25,6 +25,10 @@ import BookingManagement from './pages/BookingManagement';
 import SeatViewPage from './pages/SeatViewPage';
 import UserPaymentPage from './pages/UserPaymentPage';
 import TicketPage from './pages/TicketPage';
+import UserProfile from './pages/UserProfile';
+import ProfileTicketView from './pages/ProfileTicketView';
+import UserChat from './pages/UserChat';
+import AdminChat from './pages/AdminChat';
 
 
 function App() {
@@ -47,13 +51,16 @@ function App() {
           <Route path="/admin/schedules" element={<ScheduleManagement />} />
           <Route path="/admin/payments" element={<PaymentManagement />} />
           <Route path="/admin/bookings" element={<BookingManagement />} />
+          <Route path="/admin-chat" element={<AdminChat />} />
           <Route path="/seats/:schedule_id/:start_stop_id/:end_stop_id" element={<SeatViewPage />} />
 
           <Route path="/seatview" element={<SeatViewPage />} />
           <Route path="/payment" element={<UserPaymentPage/>} />
           <Route path="/ticket" element={<TicketPage />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/ticket-view" element={<ProfileTicketView />} />
+          <Route path="/user-chat" element={<UserChat />} />
 
-          
         </Routes>
       </Router>
     </SessionProvider>

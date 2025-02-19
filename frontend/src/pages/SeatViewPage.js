@@ -8,7 +8,7 @@ const SeatViewPage = () => {
   const { schedule_id, start_stop_id, end_stop_id } = useParams(); // Use start_stop_id and end_stop_id from the URL parameters
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useSession(); // Get user from session context
+  const { userSession } = useSession(); // Get user from session context
 
   const [seats, setSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -48,7 +48,7 @@ const SeatViewPage = () => {
   };
 
   const handleBooking = () => {
-    if (!user) {
+    if (!userSession) {
       setError('You must be logged in to proceed with the payment.');
       alert('Please log in to proceed with booking.');
       return;

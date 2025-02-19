@@ -3,28 +3,36 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const SessionContext = createContext();
 
 export const SessionProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [userSession, setUserSession] = useState(null);
+  const [adminSession, setAdminSession] = useState(null);
 
   useEffect(() => {
-    // Retrieve user from localStorage if it exists
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const storedUser = localStorage.getItem('userSession');
+    const storedAdmin = localStorage.getItem('adminSession');
+
+    if (storedUser) setUserSession(JSON.parse(storedUser));
+    if (storedAdmin) setAdminSession(JSON.parse(storedAdmin));
   }, []);
 
   const setSession = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData)); // Save user data to localStorage
+    if (userData.role === 'Admin') {
+      setAdminSession(userData);
+      localStorage.setItem('adminSession', JSON.stringify(userData)); // ✅ Store admin session
+    } else {
+      setUserSession(userData);
+      localStorage.setItem('userSession', JSON.stringify(userData)); // ✅ Store user session
+    }
   };
 
   const clearSession = () => {
-    setUser(null);
-    localStorage.removeItem('user'); // Remove user data from localStorage
+    setUserSession(null);
+    setAdminSession(null);
+    localStorage.removeItem('userSession');
+    localStorage.removeItem('adminSession');
   };
 
   return (
-    <SessionContext.Provider value={{ user, setSession, clearSession }}>
+    <SessionContext.Provider value={{ userSession, adminSession, setSession, clearSession }}>
       {children}
     </SessionContext.Provider>
   );

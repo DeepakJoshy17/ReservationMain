@@ -1,0 +1,13 @@
+[33mfb7a7b33[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: checkout: moving from main to main
+[33mfb7a7b33[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{1}: pull --tags origin main: updating HEAD
+[33mfb7a7b33[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{2}: checkout: moving from main to main
+[33mfb7a7b33[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{3}: commit: Your commit message here
+[33m5b93f36f[m HEAD@{4}: commit: day 20 chat ai and knowledge base
+[33m1d352a15[m HEAD@{5}: checkout: moving from main to main
+[33m1d352a15[m HEAD@{6}: commit: day 19 changes basic all except report
+[33m66e8f631[m HEAD@{7}: commit: ticket
+[33m6a474818[m HEAD@{8}: commit: day 14
+[33m0f58404f[m HEAD@{9}: commit: Day 10 Ui nav of both
+[33m8b4484e4[m HEAD@{10}: commit: Add login and signup functionality
+[33m4407ef76[m HEAD@{11}: Branch: renamed refs/heads/master to refs/heads/main
+[33m4407ef76[m HEAD@{13}: commit (initial): first commit

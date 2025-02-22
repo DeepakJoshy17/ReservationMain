@@ -28,6 +28,7 @@ const AdminNavbar = () => {
             <li><Link to="/admin/payments">Payments</Link></li>
             <li><Link to="/admin/bookings">Bookings</Link></li>
             <li><Link to="/admin-chat">Responses</Link></li>
+            <li><Link to="/admin/knowledge">Knowledge</Link></li>
       
             
 

@@ -165,6 +165,16 @@
 --     response_status INTEGER DEFAULT 0,
 --     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE SET NULL
 -- );
+-- CREATE TABLE knowledgeBase (
+--     id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     question TEXT,
+--     answer TEXT
+-- );
+-- INSERT INTO knowledgeBase (question, answer) VALUES
+-- ("How to book a seat?", "You can book a seat through our website by selecting the boat, date, and available seats. Then, proceed to payment."),
+-- ("How do I cancel my ticket?", "Go to the 'My Tickets' section, select the ticket, and choose the seats you want to cancel."),
+-- ("What is the refund policy?", "If all seats in a ticket are canceled, you will receive a 75% refund of the total ticket price."),
+-- ("How do I check my ticket details?", "You can view ticket details in the 'My Tickets' section, which includes QR codes and booking information.");
 -- INSERT INTO users VALUES (2,'Aliceyy', 'alice@example11.com', 123,'123','ABC','qwe');
 -- SELECT * FROM Users;
 -- INSERT INTO Routes (route_name, start_location, end_location) 

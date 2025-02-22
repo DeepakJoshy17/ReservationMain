@@ -29,6 +29,7 @@ import UserProfile from './pages/UserProfile';
 import ProfileTicketView from './pages/ProfileTicketView';
 import UserChat from './pages/UserChat';
 import AdminChat from './pages/AdminChat';
+import AdminKnowledgeBase from './pages/AdminKnowledgeBase';
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
           <Route path="/admin/bookings" element={<BookingManagement />} />
           <Route path="/admin-chat" element={<AdminChat />} />
           <Route path="/seats/:schedule_id/:start_stop_id/:end_stop_id" element={<SeatViewPage />} />
+          <Route path="/admin/knowledge" element={<AdminKnowledgeBase />} />
 
           <Route path="/seatview" element={<SeatViewPage />} />
           <Route path="/payment" element={<UserPaymentPage/>} />

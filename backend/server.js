@@ -14,6 +14,7 @@ const scheduleRoutes = require('./routes/scheduleRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const userBookingRoutes = require('./routes/userBookingRoutes');
+const knowledgeBaseRoutes = require("./routes/knowledgeBaseRoutes");
 // const seatViewRoutes = require('./routes/seatViewRoutes');
 const userPaymentRoutes = require('./routes/userPaymentRoutes');
 const ticketRoutes = require('./routes/ticketRoutes'); // Ticket routes
@@ -49,6 +50,7 @@ app.use('/api', seatRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/seat-bookings', bookingRoutes);
+app.use("/api/knowledge", knowledgeBaseRoutes);
 
 // User Routes
 app.use('/api/userBookings', userBookingRoutes);

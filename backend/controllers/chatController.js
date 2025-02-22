@@ -1,24 +1,74 @@
-const db = require('../database/db'); // SQLite database connection
+require('dotenv').config();
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const db = require('../database/db');
 
-// 🟢 User sends a message
-exports.userSendMessage = (req, res) => {
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+exports.userSendMessage = async (req, res) => {
     const { user_id, message } = req.body;
     if (!user_id || !message) return res.status(400).json({ error: "User ID and message are required" });
 
-    const query = `INSERT INTO Chats (user_id, message, sender) VALUES (?, ?, 'User')`;
-    db.run(query, [user_id, message], function (err) {
-        if (err) return res.status(500).json({ error: err.message });
+    try {
+        // ✅ Improved Knowledge Base Query for better matching
+        const knowledgeQuery = `
+            SELECT answer 
+            FROM knowledgeBase 
+            WHERE question LIKE ? 
+            ORDER BY LENGTH(question) ASC 
+            LIMIT 1
+        `;
 
-        const chat_id = this.lastID;
-        const botReply = "Hello! Our support team will respond soon.";
+        db.get(knowledgeQuery, [`%${message}%`], async (err, row) => {
+            if (err) return res.status(500).json({ error: "Database error: " + err.message });
 
-        // Bot auto-response
-        db.run(`UPDATE Chats SET bot_response = ? WHERE chat_id = ?`, [botReply, chat_id], (updateErr) => {
-            if (updateErr) return res.status(500).json({ error: updateErr.message });
-            res.status(201).json({ chat_id, message, bot_response: botReply });
+            let botReply;
+            if (row) {
+                // ✅ If knowledge base has an answer, return it directly
+                botReply = row.answer;
+            } else {
+                // ❌ If no match in knowledge base, use Gemini AI
+                const systemPrompt = `
+                You are a chatbot for a Boat Seat Booking System. Assist users based on the given knowledge.
+
+                System Info:
+                - Users can book ferry seats via our website.
+                - Payment is required for seat booking.
+                - Users receive a ticket with a QR code after payment.
+                - Tickets can be viewed and canceled in the profile section.
+                - Refund policy: 75% refund if all seats are canceled.
+                - Admins can monitor bookings and chat with users.
+
+                User's question: ${message}
+                `;
+
+                try {
+                    const result = await model.generateContent(systemPrompt);
+                    botReply = await result.response.text();
+                } catch (apiError) {
+                    console.error("Gemini API Error:", apiError);
+                    botReply = "Sorry, our AI assistant is currently unavailable. Please try again later.";
+                }
+            }
+
+            // ✅ Save the conversation in the database
+            const query = `INSERT INTO Chats (user_id, message, bot_response, sender) VALUES (?, ?, ?, 'User')`;
+            db.run(query, [user_id, message, botReply], function (err) {
+                if (err) return res.status(500).json({ error: err.message });
+                res.status(201).json({ chat_id: this.lastID, message, bot_response: botReply });
+            });
         });
-    });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
+
+
+
+
+
+
 
 // 🟢 Fetch all chat messages for a specific user
 exports.getUserChats = (req, res) => {
